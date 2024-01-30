@@ -19,12 +19,12 @@ form {
 #uploadedImage {
     max-width: 100%;
     height: 100%;
-    border: 1px solid #ff7777;
+    border: 1px solid #42dca4;
     margin-top: 10px;
 }
 
 #predictionText {
-    color: #0066cc;
+    color: #ffffff;
 }
 
 #download {
@@ -32,4 +32,11 @@ form {
 }
 #masthead {
     background-image: url('img/intro-bg.jpg');
+}
+@media (max-width: 576px) {
+    /* Adjust the styles for smaller screens */
+    #file {
+        max-width: 100%; /* Ensure the file input takes up the full width */
+        margin-bottom: 10px; /* Add some space between the file input and the button */
+    }
 }
