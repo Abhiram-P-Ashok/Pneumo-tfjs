@@ -1,53 +1,82 @@
-var model;
-var img;
-var classNames = [];
-var _validFileExtensions = [".jpg", ".jpeg", ".png"];    
-function Validate(oForm) {
-    img = oForm.getElementsByTagName("input");
-    for (var i = 0; i < img.length; i++) {
-        var oInput = img[i];
-        if (oInput.type == "file") {
-            var sFileName = oInput.value;
-            if (sFileName.length > 0) {
-                var blnValid = false;
-                for (var j = 0; j < _validFileExtensions.length; j++) {
-                    var sCurExtension = _validFileExtensions[j];
-                    if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
-                        blnValid = true;
-                        break;
-                    }
-                }
-                
-                if (!blnValid) {
-                    alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
-                    return false;
-                }
-            }
-        }
+/* Load TensorFlow.js
+var class_names = ['Bacterial Pneumonia', 'Normal', 'Viral Pneumonia'];
+async function loadModel() {
+    try {
+        const modelJson = await fetch('model/model.json');
+        const modelJsonData = await modelJson.json();
+        const modelWeights = await Promise.all([
+            fetch('model/group1-shard1of3.bin'),
+            fetch('model/group1-shard2of3.bin'),
+            fetch('model/group1-shard3of3.bin')
+        ]);
+        const modelWeightsData = await Promise.all(modelWeights.map(response => response.arrayBuffer()));
+
+        const model = await tf.loadLayersModel(bundleResourceProvider(modelJsonData, modelWeightsData));
+        return model;
+    } catch (error) {
+        console.error('Error loading model:', error);
+        return null;
     }
-  
-    return true;
+}
+
+
+function bundleResourceProvider(modelJsonData, modelWeightsData) {
+    return {
+        async modelJson() {
+            return modelJsonData;
+        },
+        async weights() {
+            return modelWeightsData;
+        },
+        async load() {
+            // No explicit loading needed for in-memory data
+        }
+    };
+}
+
+async function preprocessImage(image) {
+    const tensor = tf.browser.fromPixels(image);
+    const resized = tf.image.resizeBilinear(tensor, [299, 299]);
+    const normalized = resized.div(tf.scalar(255));
+    return normalized.expandDims(0); // Add a batch dimension
+}
+
+async function predictImage(image, model) {
+    const preprocessedImage = await preprocessImage(image);
+    const predictions = await model.predict(preprocessedImage);
+    const classIndex = predictions.argMax(1).dataSync()[0];
+    const probability = predictions.dataSync()[0][classIndex];
+    return { classIndex, probability };
 }
 function uploadAndPredict() {
-    var formData = new FormData($('#uploadForm')[0]);
+    const fileInput = document.getElementById('file');
+    const file = fileInput.files[0];
 
-    $.ajax({
-        type: 'POST',
-        url: '/',  // Change this to the correct route
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function (data) {
-            console.log('Success Data:', data);
-        
-            // Update the prediction and image on the same page
-            $('#predictionText').text('Prediction: ' + data.prediction);
-            $('#uploadedImage').attr('src', '/static/uploads/' + data.filename);
-            $('#predictionResult').show();
-        },
-        
-        error: function (error) {
-            console.log('Error:', error);
-        }
-    });
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const loadedImage = new Image();
+            loadedImage.src = e.target.result;
+            loadedImage.onload = async () => {
+                try {
+                    const model = await loadModel();
+                    if (model) {
+                        const predictionResult = await predictImage(loadedImage, model);
+                        const classLabel = class_names[predictionResult.classIndex]; // Assuming class_names is defined globally
+                        document.getElementById('predictionText').textContent = `Prediction: ${classLabel} (Probability: ${predictionResult.probability.toFixed(4)})`;
+                        document.getElementById('uploadedImage').src = loadedImage.src;
+                    } else {
+                        alert('Error loading model');
+                    }
+                } catch (error) {
+                    console.error('Error during prediction:', error);
+                    alert('An error occurred during prediction');
+                }
+            };
+        };
+        reader.readAsDataURL(file);
+    }
 }
+document.getElementById('predictButton').addEventListener('click', uploadAndPredict);
+*/
+  

@@ -6,14 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>PNEUMO</title>    
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.16.0/dist/tf.min.js"></script>
     <link rel="stylesheet" type="text/css" href="assets/styles.css">
     <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/animate.min.css">
+    <link rel="shortcut icon" href="Icons8-Ios7-Healthcare-Lungs.ico">
 </head>
 
 <body id="page-top" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="77">
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const predictButton = document.getElementById('predictButton');
+            predictButton.addEventListener('click', uploadAndPredict);
+
+            async function uploadAndPredict() {
+                const loadedModel = await tf.loadLayersModel('http://localhost:8000/model/model.json');
+            }
+        });
+    </script>
     <nav class="navbar navbar-expand-md fixed-top navbar-light" id="mainNav">
         <div class="container"><a class="navbar-brand" href="#">PNEUMO</a><button data-bs-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-bs-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -53,8 +64,8 @@
                 <h1>GO BOLDLY</h1>
                 <p>Detecting pneumonia early is your ticket to resilience. Recognize the signs, seize control, and embark on your journey to recovery. Your body communicates—listen, act, and let early detection be the spark for your wellness journey. Face the challenge, armed with knowledge and determination. Cherish your health, protect it, and thrive.</p>
                 <form id="uploadForm" method="POST" enctype="multipart/form-data">
-                    <input class="btn btn-primary btn-lg btn-default" type="file" name="file" accept=".jpg, .jpeg, .png" required>
-                    <button class="btn btn-primary btn-lg btn-default" type="button" onclick="uploadAndPredict()">PREDICT</button>
+                    <input class="btn btn-primary btn-lg btn-default" id="file" type="file" name="file" accept=".jpg, .jpeg, .png" required>
+                    <button class="btn btn-primary btn-lg btn-default" id="predictButton" type="button">PREDICT</button>
                 </form>
             
                 <div id="predictionResult">
@@ -90,11 +101,10 @@
         <p>Copyright ©&nbsp;Brand 2023</p>
     </section>
     <div class="map-clean"></div>
-    <script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/bs-init.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/grayscale.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/script.js') }}"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/grayscale.js"></script>
+    <!--<script src="assets/script.js"></script>-->
 </body>
-
 </html>
 </html>

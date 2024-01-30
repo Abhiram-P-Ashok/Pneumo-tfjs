@@ -28,7 +28,7 @@ form {
 }
 
 #download {
-    background-image: url('/static/assets/img/downloads-bg.jpg');
+    background-image: url('img/downloads-bg.jpg');
 }
 #masthead {
     background-image: url('img/intro-bg.jpg');
