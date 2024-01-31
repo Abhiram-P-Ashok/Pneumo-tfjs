@@ -23,7 +23,7 @@
 
     async function preprocessImage(image) {
         const tensor = tf.browser.fromPixels(image);
-        const resized = tf.image.resizeBilinear(tensor, [224, 224]);
+        const resized = tf.image.resizeBilinear(tensor, [299, 299]);
         const normalized = resized.div(tf.scalar(255));
         return normalized.expandDims(0); // Add a batch dimension
     }
