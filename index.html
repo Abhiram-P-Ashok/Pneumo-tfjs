@@ -17,70 +17,74 @@
 <body id="page-top" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="77">
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
-    const predictButton = document.getElementById('predictButton');
-    predictButton.addEventListener('click', uploadAndPredict);
-    var class_names = ['Bacterial Pneumonia', 'Normal', 'Viral Pneumonia'];
+            const predictButton = document.getElementById('predictButton');
+            predictButton.addEventListener('click', uploadAndPredict);
+            var class_names = ['Bacterial Pneumonia', 'Normal', 'Viral Pneumonia'];
 
-    async function preprocessImage(image) {
-        const tensor = tf.browser.fromPixels(image);
-        const resized = tf.image.resizeBilinear(tensor, [299, 299]);
-        const normalized = resized.div(tf.scalar(255));
-        return normalized.expandDims(0); // Add a batch dimension
-    }
+            async function preprocessImage(image) {
+                const tensor = tf.browser.fromPixels(image);
+                const resized = tf.image.resizeBilinear(tensor, [299, 299]);
+                const normalized = resized.div(tf.scalar(255));
+                return normalized.expandDims(0); // Add a batch dimension
+            }
 
-    async function predictImage(image, model) {
-        const preprocessedImage = await preprocessImage(image);
-        const predictions = await model.predict(preprocessedImage);
-        const classIndex = predictions.argMax(1).dataSync()[0];
-        const probability = predictions.dataSync()[0][classIndex];
-        return { classIndex, probability };
-    }
+            async function predictImage(image, model) {
+                const preprocessedImage = await preprocessImage(image);
+                const predictions = await model.predict(preprocessedImage);
+                const classIndex = predictions.argMax(1).dataSync()[0];
+                const probability = predictions.dataSync()[0][classIndex];
+                return { classIndex, probability };
+            }
 
-    async function uploadAndPredict() {
-        console.log('Button clicked!');
-        const loadedModel = await tf.loadLayersModel('model/model.json');
-        const fileInput = document.getElementById('file');
-        const file = fileInput.files[0];
+            async function uploadAndPredict() {
+                console.log('Button clicked!');
+                const loadedModel = await tf.loadLayersModel('model/model.json');
+                const fileInput = document.getElementById('file');
+                const file = fileInput.files[0];
 
-        if (file) {
-            const reader = new FileReader();
+                if (file) {
+                    const reader = new FileReader();
 
-            reader.onload = async (e) => {
-                const loadedImage = new Image();
-                loadedImage.onload = async () => {
-                    try {
-                        const model = loadedModel;
+                    reader.onload = async (e) => {
+                        const loadedImage = new Image();
+                        loadedImage.onload = async () => {
+                            try {
+                                const model = loadedModel;
 
-                        if (model) {
-                            const predictionResult = await predictImage(loadedImage, model);
-                            const classLabel = class_names[predictionResult.classIndex];
-                            console.log(classLabel);
-                            document.getElementById('predictionText').textContent = `Prediction: ${classLabel}`;
+                                if (model) {
+                                    const predictionResult = await predictImage(loadedImage, model);
+                                    const classLabel = class_names[predictionResult.classIndex];
+                                    console.log(classLabel);
+                                    document.getElementById('predictionText').textContent = `Prediction: ${classLabel}`;
 
-                            const probabilityElement = document.getElementById('predictionProbability');
-                            if (predictionResult.probability !== undefined) {
-                                const probabilityText = ` (Probability: ${predictionResult.probability.toFixed(4)})`;
-                                probabilityElement.textContent = probabilityText;
-                            } else {
-                                probabilityElement.textContent = ''; // Handle undefined probability
+                                    const probabilityElement = document.getElementById('predictionProbability');
+                                    if (predictionResult.probability !== undefined) {
+                                        const probabilityText = ` (Probability: ${predictionResult.probability.toFixed(4)})`;
+                                        probabilityElement.textContent = probabilityText;
+                                    } else {
+                                        probabilityElement.textContent = ''; // Handle undefined probability
+                                    }
+
+                                    // Display the uploaded image
+                                    const uploadedImageElement = document.getElementById('uploadedImage');
+                                    uploadedImageElement.src = loadedImage.src;
+                                    uploadedImageElement.style.display = 'block'; // Make sure the image is visible
+                                } else {
+                                    alert('Error loading model');
+                                }
+                            } catch (error) {
+                                console.error('Error during prediction:', error);
+                                alert('An error occurred during prediction');
                             }
-                            document.getElementById('uploadedImage').src = loadedImage.src;
-                        } else {
-                            alert('Error loading model');
-                        }
-                    } catch (error) {
-                        console.error('Error during prediction:', error);
-                        alert('An error occurred during prediction');
-                    }
-                };
+                        };
 
-                loadedImage.src = e.target.result;
-            };
+                        loadedImage.src = e.target.result;
+                    };
 
-            reader.readAsDataURL(file);
-        }
-    }
-});
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
     </script>
     <nav class="navbar navbar-expand-md fixed-top navbar-light" id="mainNav">
         <div class="container"><a class="navbar-brand" href="#">PNEUMO</a><button data-bs-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-bs-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
@@ -121,15 +125,15 @@
                 <h1>GO BOLDLY</h1>
                 <p>Detecting pneumonia early is your ticket to resilience. Recognize the signs, seize control, and embark on your journey to recovery. Your body communicates—listen, act, and let early detection be the spark for your wellness journey. Face the challenge, armed with knowledge and determination. Cherish your health, protect it, and thrive.</p>
                 <form id="uploadForm" method="POST" enctype="multipart/form-data">
-                        <input class="btn btn-primary btn-lg btn-default" id="file" type="file" name="file" accept=".jpg, .jpeg, .png" required>
-                        <button class="btn btn-primary btn-lg btn-default" id="predictButton" type="button">PREDICT</button>
+                    <input class="btn btn-primary btn-lg btn-default" id="file" type="file" name="file" accept=".jpg, .jpeg, .png" required>
+                    <button class="btn btn-primary btn-lg btn-default" id="predictButton" type="button">PREDICT</button>
                 </form>
-            
+
                 <div id="predictionResult">
                     <h2 id="predictionText" style="color: rgb(66, 220, 163);"></h2>
                     <span id="predictionProbability"></span>
-                    <img id="uploadedImage" alt="Uploaded Image" width=500px height=600px>
-
+                    <!-- Display the uploaded image -->
+                    <img id="uploadedImage" alt="Uploaded Image" style="display: none; max-width: 100%;" />
                 </div>
             </div>
         </div>
@@ -146,7 +150,7 @@
                                 <i class="fa fa-github fa-fw"></i>
                                 <span class="network-name">&nbsp;github</span>
                             </button>
-                            
+
                             <script>
                                 function redirectToGitHub() {
                                     window.location.href = 'https://github.com/Abhiram-P-Ashok';
@@ -165,5 +169,4 @@
     <script src="assets/js/grayscale.js"></script>
     <!--<script src="assets/script.js"></script>-->
 </body>
-</html>
 </html>
