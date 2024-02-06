@@ -39,6 +39,7 @@
             async function uploadAndPredict() {
                 console.log('Button clicked!');
                 const loadedModel = await tf.loadLayersModel('model/model.json');
+                console.log('Model loaded successfully!');
                 const fileInput = document.getElementById('file');
                 const file = fileInput.files[0];
 
