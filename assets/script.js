@@ -20,10 +20,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
     async function uploadAndPredict() {
-        console.log('Button clicked!');
         const Model = await tf.loadLayersModel('model-xray/model.json');
         const loadedModel = await tf.loadLayersModel('model/model.json');
-        console.log('Model loaded successfully!');
         const fileInput = document.getElementById('file');
         const file = fileInput.files[0];
 
@@ -39,7 +37,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         if (model) {
                             const predictionResult = await predictImage(loadedImage, model);
                             const classLabel = xray_not[predictionResult.classIndex];
-                            console.log(classLabel);
                             if (classLabel == 'Not X-Ray') {
                                 document.getElementById('predictionText').textContent = `Prediction: ${classLabel}`;
                                 const probabilityElement = document.getElementById('predictionProbability');
@@ -65,7 +62,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                                     if (model) {
                                         const predictionResult = await predictImage(loadedImage, model);
                                         const classLabel = class_names[predictionResult.classIndex];
-                                        console.log(classLabel);
                                         document.getElementById('predictionText').textContent = `Prediction: ${classLabel}`;
                                         const probabilityElement = document.getElementById('predictionProbability');
                                         if (predictionResult.probability !== undefined) {
