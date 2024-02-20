@@ -1,0 +1,18 @@
+@startuml dfd1
+title Level 1 DFD
+
+actor User as U
+boundary Website as W
+control Controller as C
+entity Model as M
+database Database as D
+
+U -> W : Interacts with
+W -> C : Sends request
+C -> M : Processes request
+M -> D : Queries/Modifies data
+M -> C : Sends response
+C -> W : Sends response
+W -> U : Displays response
+
+@enduml

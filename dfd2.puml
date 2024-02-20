@@ -1,0 +1,23 @@
+@startuml dfd2
+title Level 2 DFD
+
+actor User as U
+boundary Website as W
+control Controller as C
+entity Model as M
+database Database as D
+file Image as I
+
+U -> W : Interacts with
+W -> C : Sends request
+C -> M : Processes request
+M --> D : Queries/Modifies data
+C --> M : Sends image data
+M --> D : Stores uploaded image
+M -> D : Queries model
+D --> M : Returns model prediction
+M -> C : Sends prediction
+C --> W : Sends response
+W -> U : Displays response
+
+@enduml
