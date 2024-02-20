@@ -1,18 +1,18 @@
 @startuml dfd1
-title Level 1 DFD
 
-actor User as U
-boundary Website as W
-control Controller as C
-entity Model as M
-database Database as D
+title Level 1 DFD - PNEUMO Website
 
-U -> W : Interacts with
-W -> C : Sends request
-C -> M : Processes request
-M -> D : Queries/Modifies data
-M -> C : Sends response
-C -> W : Sends response
-W -> U : Displays response
+actor User as User
+boundary "PNEUMO Website" as Website
+control "Upload Handler" as UploadHandler
+control "Prediction System" as PredictionSystem
+database "Image Database" as ImageDB
+
+User -> Website : Interacts with
+Website -> UploadHandler : Sends Image
+UploadHandler -> PredictionSystem : For Prediction
+PredictionSystem --> UploadHandler : Sends Result
+UploadHandler -> Website : Result
+Website -> User : Displays Result
 
 @enduml

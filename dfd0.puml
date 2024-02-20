@@ -1,13 +1,14 @@
 @startuml dfd0
-title Level 0 DFD - Context Diagram
 
-actor User as U
-boundary Website as W
-control Server as S
-database Database as D
+title Level 0 DFD - PNEUMO Website
 
-U --> W : Interacts with
-W --> S : Sends HTTP requests
-S --> D : Queries/Modifies data
+actor User as User
+boundary "PNEUMO Website" as Website
+control "Prediction System" as PredictionSystem
+
+User -> Website : Interacts with
+Website -> PredictionSystem : Sends Image
+PredictionSystem --> Website : Sends Prediction
+Website --> User : Displays Result
 
 @enduml

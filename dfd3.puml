@@ -1,6 +1,6 @@
-@startuml dfd2
+@startuml dfd3
 
-title Level 2 DFD - PNEUMO Website
+title Level 3 DFD - PNEUMO Website
 
 actor User as User
 boundary "PNEUMO Website" as Website
@@ -8,12 +8,14 @@ control "Upload Form" as UploadForm
 control "Prediction Module" as PredictionModule
 database "User Database" as UserDB
 database "Image Database" as ImageDB
+entity "Image File" as ImageFile
 
 User -> Website : Interacts with
 Website -> UploadForm : Requests Upload
 UploadForm -> Website : Display Form
 User -> UploadForm : Uploads Image
 UploadForm -> Website : Sends Image
+Website -> ImageDB : Stores Image
 Website -> PredictionModule : For Prediction
 PredictionModule --> Website : Sends Result
 Website -> User : Displays Result
