@@ -6,7 +6,7 @@ actor User as User
 boundary "PNEUMO Website" as Website
 control "Upload Handler" as UploadHandler
 control "Prediction System" as PredictionSystem
-database "Image Database" as ImageDB
+
 
 User -> Website : Interacts with
 Website -> UploadHandler : Sends Image

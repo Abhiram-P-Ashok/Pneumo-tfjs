@@ -5,17 +5,19 @@ title Level 2 DFD - PNEUMO Website
 actor User as User
 boundary "PNEUMO Website" as Website
 control "Upload Form" as UploadForm
-control "Prediction Module" as PredictionModule
-database "User Database" as UserDB
-database "Image Database" as ImageDB
+control "X-Ray or Not X-Ray Prediction Module" as XRayPredictionModule
+control "Pneumonia Prediction Module" as PneumoniaPredictionModule
 
 User -> Website : Interacts with
 Website -> UploadForm : Requests Upload
 UploadForm -> Website : Display Form
 User -> UploadForm : Uploads Image
 UploadForm -> Website : Sends Image
-Website -> PredictionModule : For Prediction
-PredictionModule --> Website : Sends Result
-Website -> User : Displays Result
+Website -> XRayPredictionModule : Check X-Ray or Not
+XRayPredictionModule --> Website : If Not X-Ray Sends Not X-Ray
+Website -> User : Displays Not X-Ray and the Image
+XRayPredictionModule --> PneumoniaPredictionModule : If X-Ray
+PneumoniaPredictionModule --> Website : Sends Result
+Website -> User : Displays Result and the Image
 
 @enduml
